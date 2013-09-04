@@ -3,21 +3,21 @@
 #include "stdafx.h"
 #include "BinaryTree.h"
 
-void InsertNode(BSTreeNode *BSTree, int value)
+void InsertNode(BSTree &BST, int value)
 {
-	if (BSTree == NULL)
-	{
-		BSTree = new BSTreeNode();
-		BSTree->value = value;
-		BSTree->count = 1;
-		BSTree->left = BSTree->right = NULL;
-	}
-	else if (value < BSTree->value)
-		InsertNode(BSTree->left, value);
-	else if (value > BSTree->value)
-		InsertNode(BSTree->right, value);
-	else
-		++BSTree->count;
+	BSTree node = new struct BSTreeNode();
+	node->value = value;
+	node->count = 1;
+	node->left = node->right = NULL;
+
+	if (BST == NULL)
+		BST = node;
+	else if (value < BST->value)
+		InsertNode(BST->left, value);
+	else if (value > BST->value)
+		InsertNode(BST->right, value);
+	else if (value == BST->value)
+		++BST->count;
 }
 
 void DeleteNode(BSTreeNode *BSTree, int value)
@@ -25,44 +25,62 @@ void DeleteNode(BSTreeNode *BSTree, int value)
 
 }
 
-BSTreeNode* BuildBSTree(BSTreeNode *BSTree, int data[], int low, int high)
+void BuildBSTree(BSTree &BST, int data[], int low, int high)
 {
 	if (data == NULL || low > high)
-		return NULL;
-	BSTreeNode *BSTree = new BSTreeNode();
+		return;
 
 	int i;
-	for (i = low + 1; i <= high; i++)
+	for (i = low; i <= high; i++)
 	{
-		InsertNode(BSTree, data[i]);
+		InsertNode(BST, data[i]);
 	}
-	return BSTree;
 }
 
-BSTreeNode* Search(BSTreeNode *BSTree, int value)
+BSTree Search(BSTree &BST, int value)
 {
-	return BSTree;
+	return BST;
 }
-void PreOrderTraverse(BSTreeNode *BSTree)
+void PreOrderTraverse(BSTree BST)
 {
-
-}
-void MidOrderTraverse(BSTreeNode *BSTree)
-{
-	if (BSTree == NULL)
+	if (BST)
 	{
-		return;
+		int i;
+		for (i = 0; i < BST->count; i++)
+		{
+			printf("%d ", BST->value);
+		}
+		MidOrderTraverse(BST->left);
+		MidOrderTraverse(BST->right);
 	}
-	else
-	{
-		MidOrderTraverse(BSTree->left);
-		printf("%d ", BSTree->value);
-		MidOrderTraverse(BSTree->right);
-	}
-
 }
-void PostOrderTraverse(BSTreeNode *BSTree)
+void MidOrderTraverse(BSTree BST)
 {
+	if (BST)
+	{
+		MidOrderTraverse(BST->left);
+		int i;
+		for (i = 0; i < BST->count; i++)
+		{
+			printf("%d ", BST->value);
+		}
+		printf("%d ", BST->value);
+		MidOrderTraverse(BST->right);
+	}
+}
 
+void PostOrderTraverse(BSTree BST)
+{
+	if (BST)
+	{
+		MidOrderTraverse(BST->left);
+		MidOrderTraverse(BST->right);
+		int i;
+		for (i = 0; i < BST->count; i++)
+		{
+			printf("%d ", BST->value);
+		}
+		printf("%d ", BST->value);
+	}
 }
 

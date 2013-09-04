@@ -2,18 +2,18 @@
 
 #pragma once
 
-struct BSTreeNode
+typedef struct BSTreeNode
 {
 	int value;
 	int count;
 	BSTreeNode* left;
 	BSTreeNode* right;
-};
+}*BSTree;
 
-void InsertNode(BSTreeNode **BSTree, int value);
-void DeleteNode(BSTreeNode **BSTree, int value);
-BSTreeNode* BuildBSTree(int data[], int low, int high);
-BSTreeNode* Search(BSTreeNode *BSTree, int value);
-void PreOrderTraverse(BSTreeNode *BSTree);
-void MidOrderTraverse(BSTreeNode *BSTree);
-void PostOrderTraverse(BSTreeNode *BSTree);
+void InsertNode(BSTree &BST, int value);
+void DeleteNode(BSTree &BST, int value);
+void BuildBSTree(BSTree &BST,int data[], int low, int high);
+BSTree Search(BSTree &BST, int value);
+void PreOrderTraverse(BSTree BST);
+void MidOrderTraverse(BSTree BST);
+void PostOrderTraverse(BSTree BST);
