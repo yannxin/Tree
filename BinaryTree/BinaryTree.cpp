@@ -69,6 +69,60 @@ void InsertNode(BSTree &BST, int value)
 
 void DeleteNode(BSTree &BST, int value)
 {
+	BSTree pnode = SearchBST(BST, value, 1);
+	BSTree dnode = NULL;
+	int position = 0; // position is -1, 0, 1, which represents left, self, right respectly.
+
+	if (pnode == NULL)
+	{
+		printf("Delete node is not found.\n");
+		return;
+	}
+	else if (value == pnode->value)
+	{
+		dnode = pnode;
+		position = 0;
+	}
+	else if (value < pnode->value)
+	{
+		dnode = pnode->left;
+		position = -1;
+	}
+	else
+	{
+		dnode = pnode->right;
+		position = 1;
+	}
+
+	if (1 < dnode->count)
+	{
+		--dnode->count;
+		return;
+	}
+	else if ( !dnode->left )
+	{
+		if (0 == position)
+			BST = dnode->right;
+		else if (-1 == position)
+			pnode->left = dnode->right;
+		else 
+			pnode->right = dnode->right;
+	}
+	else if ( dnode->left )
+	{
+		BSTree pmostRight = dnode;
+		BSTree mostRight = dnode->left;
+		while (mostRight->right)
+		{
+			pmostRight = mostRight;
+			mostRight = mostRight->right;
+		}
+		dnode->value = mostRight->value;	
+		if (pmostRight == BST)
+			pmostRight->left = mostRight->left; 
+		else
+			pmostRight->right = mostRight->left;
+	}
 
 }
 
@@ -84,20 +138,36 @@ void BuildBSTree(BSTree &BST, int data[], int low, int high)
 	}
 }
 
-BSTree SearchBST(BSTree &BST, int value)
+// if flag is true, return the parent of node.
+// else return the node.
+BSTree SearchBST(BSTree &BST, int value, int flag)
 {
-	BSTree p = BST;
-	while (p)
+	BSTree node = BST;
+	BSTree pnode = BST;
+	while (node)
 	{
-		if (value == p->value)
-			return p;
-		else if (value < p->value)
-			p = p->left;
-		else if (value > p->value)
-			p = p->right;
+		if (value == node->value)
+		{
+			if (flag)
+				return pnode;
+			else
+				return node;
+		}
+		else if (value < node->value)
+		{
+			pnode = node;
+			node = node->left;
+		}
+			
+		else if (value > node->value)
+		{
+			pnode = node;
+			node = node->right;
+		}
 	}
 	return NULL;
 }
+
 void PreOrderTraverse(BSTree BST)
 {
 	if (BST)
@@ -107,8 +177,8 @@ void PreOrderTraverse(BSTree BST)
 		{
 			printf("%d ", BST->value);
 		}
-		MidOrderTraverse(BST->left);
-		MidOrderTraverse(BST->right);
+		PreOrderTraverse(BST->left);
+		PreOrderTraverse(BST->right);
 	}
 }
 void MidOrderTraverse(BSTree BST)
@@ -129,8 +199,8 @@ void PostOrderTraverse(BSTree BST)
 {
 	if (BST)
 	{
-		MidOrderTraverse(BST->left);
-		MidOrderTraverse(BST->right);
+		PostOrderTraverse(BST->left);
+		PostOrderTraverse(BST->right);
 		int i;
 		for (i = 0; i < BST->count; i++)
 		{
