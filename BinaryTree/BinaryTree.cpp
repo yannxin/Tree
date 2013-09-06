@@ -110,6 +110,7 @@ void DeleteNode(BSTree &BST, int value)
 	}
 	else if ( dnode->left )
 	{
+
 		BSTree pmostRight = dnode;
 		BSTree mostRight = dnode->left;
 		while (mostRight->right)
@@ -117,11 +118,24 @@ void DeleteNode(BSTree &BST, int value)
 			pmostRight = mostRight;
 			mostRight = mostRight->right;
 		}
-		dnode->value = mostRight->value;	
-		if (pmostRight == BST)
-			pmostRight->left = mostRight->left; 
+		if (0 == position)
+		{
+			mostRight->right = BST->right;
+			BST = BST->left;
+		}
+		else if(pmostRight == dnode)
+		{
+			dnode->left = mostRight->left;
+			dnode->value = mostRight->value;
+			dnode->count = mostRight->count;
+		}
 		else
+		{
 			pmostRight->right = mostRight->left;
+			dnode->value = mostRight->value;
+			dnode->count = mostRight->count;
+		}
+
 	}
 
 }
